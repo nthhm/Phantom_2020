@@ -1,0 +1,12 @@
+﻿  SceneMgr.cpp
+  Menu.cpp
+  main.cpp
+  Keyboard.cpp
+  Game.cpp
+c:\users\nec-pcuser\desktop\phantom(program)\phantom\game.cpp(678): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\nec-pcuser\desktop\phantom(program)\phantom\game.cpp(884): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\nec-pcuser\desktop\phantom(program)\phantom\game.cpp(886): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+  FontSize.cpp
+  Config.cpp
+  コードを生成中...
+  Phantom.vcxproj -> C:\Users\NEC-PCuser\Desktop\Phantom(program)\x64\Debug\Phantom.exe
