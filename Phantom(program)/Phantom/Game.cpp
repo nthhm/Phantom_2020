@@ -7,9 +7,7 @@
 // 固定値定義 -------------------------------------------------------------------------------------
 
 // キャラクター共通の情報
-#define CHARA_PLAY_ANIM_SPEED			250.0f		// アニメーション速度
 #define CHARA_MOVE_SPEED				30.0f		// 移動速度
-#define CHARA_ANIM_BLEND_SPEED			0.1f		// アニメーションのブレンド率変化速度
 #define CHARA_ANGLE_SPEED				0.2f		// 角度変化速度
 #define CHARA_JUMP_POWER				100.0f		// ジャンプ力
 #define CHARA_FALL_UP_POWER				20.0f		// 足を踏み外した時のジャンプ力
@@ -94,8 +92,8 @@ struct CAMERA
 //アイテム情報構造体
 struct ITEM {
 
-	VECTOR		ItemPosition;					// 座標
-	int			ItemHandle;						// モデルハンドル
+	int			ItemHandle;			// モデルハンドル
+	VECTOR		ItemPosition;		// 座標
 
 };
 
@@ -127,7 +125,6 @@ void Game_Over(void);				// ゲームオーバー関数
 
 void Item_Initialize(ITEM *item, VECTOR ItemPosition);
 void Item_Terminate(void);
-void Item_Process(void);
 
 
 // 実体宣言 ---------------------------------------------------------------------------------------
@@ -298,6 +295,23 @@ void Chara_Move(CHARA *ch, VECTOR MoveVector)
 
 	// 移動後の座標を算出
 	NowPos = VAdd(ch->Position, MoveVector);
+
+
+	// Ｚバッファを有効にする
+	SetUseZBuffer3D(TRUE);
+
+	// Ｚバッファへの書き込みを有効にする
+	SetWriteZBuffer3D(TRUE);
+
+
+	//クリア判定
+	float r = 175.0f;
+	VECTOR pos1 = VGet(0.0f, 50.0f, 0.0f), pos2 = VGet(0.0f, 0.0f, 0.0f);
+	DrawCapsule3D(pos1, pos2, r, 8, GetColor(0, 0, 0), GetColor(0, 0, 0), TRUE);
+	if (HitCheck_Capsule_Capsule(OldPos, NowPos, r, pos1, pos2, r)) {
+		Game_I = 1;
+	}
+
 
 	// キャラクターの周囲にあるステージポリゴンを取得する
 	// ( 検出する範囲は移動距離も考慮する )
@@ -725,7 +739,7 @@ void Chara_AngleProcess(CHARA *ch)
 void Player_Initialize(void)
 {
 	// キャラクター情報を初期化
-	Chara_Initialize(&pl.CharaInfo, VGet(0.0f, 0.0f, 0.0f));
+	Chara_Initialize(&pl.CharaInfo, VGet(20000.0f, 0.0f, 0.0f));
 }
 
 // プレイヤーの後始末
@@ -1053,26 +1067,6 @@ void Camera_Process(void)
 	SetCameraPositionAndTarget_UpVecY(cam.Eye, cam.Target);
 }
 
-// 描画処理
-void Render_Process(void)
-{
-	int i;
-
-	// ステージモデルの描画
-	MV1DrawModel(stg.ModelHandle);
-
-	// プレイヤーモデルの描画
-	MV1DrawModel(pl.CharaInfo.ModelHandle);
-
-	// プレイヤー以外キャラモデルの描画
-	for (i = 0; i < NOTPLAYER_NUM; i++)
-	{
-		MV1DrawModel(npl[i].CharaInfo.ModelHandle);
-	}
-
-}
-
-
 //ゲームクリア関数
 void Game_Clear(void) {
 
@@ -1120,7 +1114,8 @@ void Game_Over(void) {
 //以下クリア条件関連
 void Item_Initialize(ITEM *item, VECTOR ItemPosition) {
 
-	item->ItemHandle = MV1LoadModel("dat\\Diamond.mqoz");
+
+	item->ItemHandle = MV1LoadModel("dat\\Diamond.x");
 
 	item->ItemPosition = ItemPosition;
 
@@ -1132,9 +1127,26 @@ void Item_Terminate(void) {
 
 }
 
-void Item_Process(void) {
+// 描画処理
+void Render_Process(void)
+{
+	int i;
+
+	// ステージモデルの描画
+	MV1DrawModel(stg.ModelHandle);
+
+	// プレイヤーモデルの描画
+	MV1DrawModel(pl.CharaInfo.ModelHandle);
 
 
+	MV1DrawModel(item.ItemHandle);
+
+
+	// プレイヤー以外キャラモデルの描画
+	for (i = 0; i < NOTPLAYER_NUM; i++)
+	{
+		MV1DrawModel(npl[i].CharaInfo.ModelHandle);
+	}
 
 }
 
@@ -1160,8 +1172,7 @@ void Game_Initialize() {
 	Camera_Initialize();
 
 	//アイテムの初期化
-	Item_Initialize(&item, { 1000,0,1000 });
-
+	Item_Initialize(&item, VGet(0.0f, 0.0f, 0.0f));
 
 }
 
@@ -1194,9 +1205,6 @@ void Game_Update() {
 
 		// カメラの処理
 		Camera_Process();
-
-		//アイテムの処理
-		Item_Process();
 
 		//描画
 		Game_Draw();
