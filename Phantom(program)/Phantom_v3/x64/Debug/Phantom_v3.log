@@ -1,0 +1,8 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output ディレクトリの末尾がスラッシュではありません。Output ディレクトリが適切に評価されるようにするために、このビルド インスタンスによってスラッシュが追加されます。
+  Game.cpp
+c:\users\takahiro\desktop\phantom_v3\phantom_v3\source\game.cpp(703): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\takahiro\desktop\phantom_v3\phantom_v3\source\game.cpp(918): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\takahiro\desktop\phantom_v3\phantom_v3\source\game.cpp(920): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+  Main.cpp
+  コードを生成中...
+  Phantom_v3.vcxproj -> C:\Users\Takahiro\Desktop\Phantom_v3\Phantom_v3\.\x64\Debug\Phantom_v3.exe
